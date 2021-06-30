@@ -48,6 +48,11 @@
                         Content="Validate"
                         Width="60"
                         Height="30"></Button>
+               <Button Margin="5,10,0,0"
+                        Name="Refresh"
+                        Content="Refresh"
+                        Width="60"
+                        Height="30"></Button>
   		       </StackPanel>
   		      </StackPanel>
   		      <StackPanel
@@ -57,7 +62,7 @@
                               Visibility="Visible">
                               <DataGrid
                                  Name="Users"
-                                 Width="380"
+                                 Width="550"
                                  Height="200"
                                  Margin="2,10,2,2"
                                  BorderThickness="1"
@@ -72,7 +77,9 @@
                                        Header="IsSelected"
                                        Width="88"/>
                                     <DataGridTextColumn Binding="{Binding Login}" Header="Login" Width="88"/>
-                                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="204"/>
+                                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="120"/>
+                                    <DataGridTextColumn Binding="{Binding PwdExpire}" Header="Password Expired" Width="140"/>
+                                    <DataGridTextColumn Binding="{Binding Last_Modified}" Header="Last Modified" Width="110"/>
                                  </DataGrid.Columns>
                               </DataGrid>
           </StackPanel>

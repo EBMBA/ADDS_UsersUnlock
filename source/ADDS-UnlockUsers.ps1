@@ -68,8 +68,21 @@ function Validate-IsEmptyTrim ([string] $field) {
 #                       DATA       						       		                #
 #########################################################################
 
-$UsersLocks = $(Search-ADAccount -LockedOut | Select-Object -Property Name, SamAccountName)
+$UsersLocks = $(Search-ADAccount -LockedOut | Select-Object -Property Name, SamAccountName, PasswordExpired, PasswordLastSet)
 Write-Host $UsersLocks
+
+$WPF_Refresh.Add_Click({
+  $WPF_Users.Items.Clear()
+  $UsersLocksTemp = $(Search-ADAccount -LockedOut | Select-Object -Property Name, SamAccountName, PasswordExpired, PasswordLastSet)
+  foreach ($UserLock in $UsersLocksTemp) {
+    $GroupsList = New-Object PSObject
+    $GroupsList = $GroupsList | Add-Member NoteProperty Login $UserLock.SamAccountName -passthru
+    $GroupsList = $GroupsList | Add-Member NoteProperty Name $UserLock.Name -passthru	
+    $GroupsList = $GroupsList | Add-Member NoteProperty PwdExpire $UserLock.PasswordExpired -passthru
+    $GroupsList = $GroupsList | Add-Member NoteProperty Last_Modified $UserLock.PasswordLastSet -passthru	
+    $WPF_Users.Items.Add($GroupsList) > $null
+  }
+})
 
 $Form.Add_ContentRendered({
   $WPF_Validate.IsEnabled = $false
@@ -79,6 +92,8 @@ foreach ($UserLock in $UsersLocks) {
   $GroupsList = New-Object PSObject
   $GroupsList = $GroupsList | Add-Member NoteProperty Login $UserLock.SamAccountName -passthru
   $GroupsList = $GroupsList | Add-Member NoteProperty Name $UserLock.Name -passthru	
+  $GroupsList = $GroupsList | Add-Member NoteProperty PwdExpire $UserLock.PasswordExpired -passthru
+  $GroupsList = $GroupsList | Add-Member NoteProperty Last_Modified $UserLock.PasswordLastSet -passthru	
   $WPF_Users.Items.Add($GroupsList) > $null
 }
 
